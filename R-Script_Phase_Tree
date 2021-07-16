@@ -1,0 +1,32 @@
+library(treeio)
+library(ggtree)
+library(ape)
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+#read Tree
+read.iqtree("ML_Capsid.tree")
+#Tree to a variable
+TreeORF <- read.iqtree("ML_Capsid.tree")
+TreeORF
+TreeRDRP <- read.iqtree("ML_RdRp.tree")
+TreeRDRP
+#rerooting the tree using the ape package
+RORF2 <- root(TreeORF, outgroup, node = 427, resolve.root = TRUE)
+RRDRP <- root(TreeRDRP, outgroup, node = 653, resolve.root = TRUE)
+P1 <- ggtree(RORF2, size=0.8, color="gray")
+P2 <- ggtree(RRDRP, size=0.8, color="gray") + scale_x_reverse()
+info_RDRP <- read.csv("TableS1.csv")
+info_capsid <- read.csv("TableS2.csv")
+P1 <- P1 %<+% info_capsid
+P2 <- P2 %<+% info_RDRP
+P1 <- P1 + geom_tippoint(aes(color=Species), size=2.5, alpha=0.6)+
+ scale_colour_manual(values = c("PBVC1" = "goldenrod2","PBVC2" = "cyan2","PBVC3" = "darkorchid"))+
+ vexpand(0.05, direction = -1)+
+ theme_tree2(legend.position = "left", legend.text=element_text(size = 14))
+P2 <- P2 + geom_tippoint(aes(color=Species), size=2.5, alpha=0.6)+
+ scale_colour_manual(values = c("PBVR1" = "red","PBVR2" = "blue","PBVR3" = "darkgreen"))+
+ vexpand(0.05, direction = -1)+
+ theme_tree2(legend.text=element_text(size = 14))
+multiplot(P1, P2, ncol=2)
+ggsave('PBV_cphyl', width = 16, height = 10, units = "in", dpi=400, limitsize = FALSE)
