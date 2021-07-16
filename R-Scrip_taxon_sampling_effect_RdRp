@@ -1,0 +1,35 @@
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(RColorBrewer)
+library(ggpubr)
+library(viridisLite)
+library(viridis)
+
+RDRP <- Supplementary_TableS1 <-  read_excel("TableS1.xlsx", 
+                                             na = "NA", skip = 1)
+View(RDRP)
+P <- RDRP %>% 
+ drop_na(Host) %>%
+  ggplot(aes(fct_infreq(Host))) +
+  geom_bar( fill = "#0404B4", width = 0.6)+
+    coord_flip()+
+  theme_classic()
+P+labs(x = "Host",
+       y = "Counts",
+       title = "Number of sequences by hosts")+
+  font("title", size = 40, color = "black", face = "bold")+
+  #font("subtitle", size = 10, color = "orange")+
+  #font("caption", size = 10, color = "orange")+
+  font("xlab", size = 36, color = "black", face = "bold")+
+  font("ylab", size = 32, color = "black", face = "bold")+
+  #font("xy.text", size = 12, color = "gray", face = "bold")
+  font("y.text", size = 20, color = "black", face = "italic")+
+  font("x.text", size = 24, color = "black", face = "bold")+
+  scale_y_continuous(breaks=seq(0,100,10))+
+  ggsave('PBV_RDRP_host_distribution.png', width = 16, height = 10, units = "in", dpi=400, limitsize = FALSE)
+  #font("xlab", size = 12, color = "black")+
+  #font("ylab", size = 12, color = "black", face = "italic")
