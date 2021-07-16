@@ -1,0 +1,37 @@
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(RColorBrewer)
+library(ggpubr)
+library(viridisLite)
+library(viridis)
+
+Capsid <- read_excel("TableS2.xlsx", 
+                                              na = "NA", skip = 1)
+View(Capsid)
+P <- Capsid %>% 
+ drop_na(Host) %>%
+  ggplot(aes(fct_infreq(Host))) +
+  geom_bar( fill = "firebrick4", width = 0.6)+
+    coord_flip()+
+  theme_classic()
+P+labs(x = "Host",
+       y = "Counts",
+       title = "Number of sequences by hosts")+
+  font("title", size = 40, color = "black", face = "bold")+
+  #font("subtitle", size = 10, color = "orange")+
+  #font("caption", size = 10, color = "orange")+
+  font("xlab", size = 36, color = "black", face = "bold")+
+  font("ylab", size = 32, color = "black", face = "bold")+
+  #font("xy.text", size = 12, color = "gray", face = "bold")
+  font("y.text", size = 24, color = "black", face = "italic")+
+  font("x.text", size = 24, color = "black", face = "bold")+
+  scale_y_continuous(breaks=seq(0,300,25))+
+  ggsave('PBV_casid_host_distribution.png', width = 16, height = 10, units = "in", dpi=400, limitsize = FALSE)
+  #font("xlab", size = 12, color = "black")+
+  #font("ylab", size = 12, color = "black", face = "italic")
+ 
+  
